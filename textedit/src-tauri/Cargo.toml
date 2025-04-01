@@ -1,0 +1,39 @@
+[package]
+name = "textedit"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["Aarav"]
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# --- NOTE on [lib] ---
+# The [lib] section is often not needed for standard Tauri apps generated
+# with `create-tauri-app`. Unless you have a specific reason for structuring
+# your project this way (e.g., a workspace or complex Rust integration),
+# you might consider removing this section to simplify the build process
+# and ensure it aligns with standard Tauri project structure where `main.rs`
+# is the primary entry point. If you keep it, ensure your `main.rs` is
+# correctly placed and configured according to your project structure.
+[lib]
+name = "textedit_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+# Assuming tauri-build v2 is correct for your setup
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+
+# --- FIX: ADD REQUIRED FEATURES ---
+tauri = { version = "2", features = [
+    "dialog-save",    # Enables app_handle.dialog().save_file()
+    "fs-write-file",  # Enables file writing capabilities (needs allowlist too)
+    "event-all"       # Enables the event system for menu -> frontend communication
+    # Add other features here as needed, e.g., "shell-open"
+] }
+# --- END FIX ---
+
+tauri-plugin-opener = "2" # This is fine if you use it
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
