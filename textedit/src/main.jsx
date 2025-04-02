@@ -1,9 +1,46 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
+import { invoke } from '@tauri-apps/api/tauri';
+import { dialog } from '@tauri-apps/api';
+import { useState } from 'react';
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+function FileMenu() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const createNewFile = async () => {
+    try {
+      // Open save dialog to let user choose location and filename
+      const filePath = await dialog.save({
+        filters: [{
+          name: 'Text',
+          extensions: ['txt']
+        }]
+      });
+
+      // If user didn't cancel the dialog
+      if (filePath) {
+        // Call Rust backend to create the file
+        await invoke('create_new_file', { path: filePath });
+        setIsOpen(false); // Close menu after file creation
+      }
+    } catch (error) {
+      console.error('Error creating file:', error);
+    }
+  };
+
+  return (
+    <div className="file-menu">
+      <button onClick={() => setIsOpen(!isOpen)}>
+        File
+      </button>
+      
+      {isOpen && (
+        <div className="menu-dropdown">
+          <button onClick={createNewFile}>
+            New File
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default FileMenu;
