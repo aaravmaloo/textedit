@@ -1,5 +1,5 @@
-import { invoke } from '@tauri-apps/api/tauri';
-import { dialog } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
+import { save } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
 
 function FileMenu() {
@@ -8,7 +8,7 @@ function FileMenu() {
   const createNewFile = async () => {
     try {
       // Open save dialog to let user choose location and filename
-      const filePath = await dialog.save({
+      const filePath = await save({
         filters: [{
           name: 'Text',
           extensions: ['txt']
@@ -31,7 +31,7 @@ function FileMenu() {
       <button onClick={() => setIsOpen(!isOpen)}>
         File
       </button>
-      
+
       {isOpen && (
         <div className="menu-dropdown">
           <button onClick={createNewFile}>

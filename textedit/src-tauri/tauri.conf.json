@@ -9,16 +9,7 @@
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
-  "tauri": {
-    "allowlist": {
-      "fs": {
-        "create": true,
-        "scope": ["**"]
-      },
-      "dialog": {
-        "save": true
-      }
-    },
+  "app": {
     "windows": [
       {
         "title": "textedit",
